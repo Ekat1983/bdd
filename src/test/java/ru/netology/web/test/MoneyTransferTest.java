@@ -1,5 +1,6 @@
 package ru.netology.web.test;
 
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -7,7 +8,6 @@ import org.junit.jupiter.api.Test;
 import ru.netology.web.data.DataHelper;
 import ru.netology.web.page.DashboardPage;
 import ru.netology.web.page.LoginPage;
-
 
 import static com.codeborne.selenide.Selenide.open;
 
@@ -31,7 +31,7 @@ public class MoneyTransferTest {
         if (beforeBalanceFirstCard > beforeBalanceSecondCard) {
             difference = beforeBalanceFirstCard - beforeBalanceSecondCard;
             difference = difference / 2;
-            var transferPage = dashboardPage.replenishCard(DataHelper.getFirstCardInfo(authInfo));
+            var transferPage = dashboardPage.replenishCard(DataHelper.getSecondCardInfo(authInfo));
             transferPage.transferMoney(
                     DataHelper.getFirstCardInfo(authInfo).getCardNumber(),
                     difference);
@@ -46,7 +46,7 @@ public class MoneyTransferTest {
     }
 
     @Test
-    public void shouldTransferMoneyToFirstCardFromSecondCardTest() {
+    void shouldTransferMoneyToFirstCardFromSecondCardTest() {
         var loginPage = new LoginPage();
         var authInfo = DataHelper.getAuthInfo();
         var verificationPage = loginPage.validLogin(authInfo);
@@ -108,55 +108,56 @@ public class MoneyTransferTest {
         Assertions.assertEquals(beforeBalanceSecondCard, afterBalanceSecondCard);
     }
 
+    @Test
+    void shouldTransferMoneyToSecondCardFromFirstCardNegativeSumTest() {
+        var loginPage = new LoginPage();
+        var authInfo = DataHelper.getAuthInfo();
+        var verificationPage = loginPage.validLogin(authInfo);
+        var verificationCode = DataHelper.getVerificationCodeFor(authInfo);
+        var dashboardPage = verificationPage.validVerify(verificationCode);
 
-        @Test
-        void shouldTransferMoneyToSecondCardFromFirstCardNegativeSumTest() {
-            var loginPage = new LoginPage();
-            var authInfo = DataHelper.getAuthInfo();
-            var verificationPage = loginPage.validLogin(authInfo);
-            var verificationCode = DataHelper.getVerificationCodeFor(authInfo);
-            var dashboardPage = verificationPage.validVerify(verificationCode);
+        int beforeBalanceFirstCard = dashboardPage.getIdAccountBalance(DataHelper.getFirstCardInfo(authInfo));
+        int beforeBalanceSecondCard = dashboardPage.getIdAccountBalance(DataHelper.getSecondCardInfo(authInfo));
+        var transferPage = dashboardPage.replenishCard(DataHelper.getSecondCardInfo(authInfo));
+        transferPage.transferMoney(
+                DataHelper.getFirstCardInfo(authInfo).getCardNumber(),
+                -100);
+        int afterBalanceFirstCard = dashboardPage.getIdAccountBalance(DataHelper.getFirstCardInfo(authInfo));
+        int afterBalanceSecondCard = dashboardPage.getIdAccountBalance(DataHelper.getSecondCardInfo(authInfo));
 
-            int beforeBalanceFirstCard = dashboardPage.getIdAccountBalance(DataHelper.getFirstCardInfo(authInfo));
-            int beforeBalanceSecondCard = dashboardPage.getIdAccountBalance(DataHelper.getSecondCardInfo(authInfo));
-            var transferPage = dashboardPage.replenishCard(DataHelper.getSecondCardInfo(authInfo));
-            transferPage.transferMoney(
-                    DataHelper.getFirstCardInfo(authInfo).getCardNumber(),
-                    -100);
-            int afterBalanceFirstCard = dashboardPage.getIdAccountBalance(DataHelper.getFirstCardInfo(authInfo));
-            int afterBalanceSecondCard = dashboardPage.getIdAccountBalance(DataHelper.getSecondCardInfo(authInfo));
-
-            Assertions.assertEquals(beforeBalanceFirstCard - 100, afterBalanceFirstCard);
-            Assertions.assertEquals(beforeBalanceSecondCard + 100, afterBalanceSecondCard);
-        }
-
-        @Test
-        void shouldTransferMoneyToFirstCardFromSecondCardHugeSumTest () {
-            var loginPage = new LoginPage();
-            var authInfo = DataHelper.getAuthInfo();
-            var verificationPage = loginPage.validLogin(authInfo);
-            var verificationCode = DataHelper.getVerificationCodeFor(authInfo);
-            var dashboardPage = verificationPage.validVerify(verificationCode);
-            var transferPage = dashboardPage.replenishCard(DataHelper.getFirstCardInfo(authInfo));
-
-            transferPage.TransferMoney(DataHelper.getSecondCardInfo(authInfo).getCardNumber());
-
-            transferPage.transferPageErrorMassage();
-        }
-
-        @Test
-        void shouldTransferMoneyToSecondCardFromFirstCardHugeSum2Test() {
-            var loginPage = new LoginPage();
-            var authInfo = DataHelper.getAuthInfo();
-            var verificationPage = loginPage.validLogin(authInfo);
-            var verificationCode = DataHelper.getVerificationCodeFor(authInfo);
-            var dashboardPage = verificationPage.validVerify(verificationCode);
-            var transferPage = dashboardPage.replenishCard(DataHelper.getSecondCardInfo(authInfo));
-
-            transferPage.TransferMoney(
-                    DataHelper.getSecondCardInfo(authInfo).getCardNumber());
-
-            transferPage.transferPageErrorMassage();
-        }
-
+        Assertions.assertEquals(beforeBalanceFirstCard - 100, afterBalanceFirstCard);
+        Assertions.assertEquals(beforeBalanceSecondCard + 100, afterBalanceSecondCard);
     }
+
+    @Test
+    void shouldTransferMoneyToFirstCardFromSecondCardHugeSumTest() {
+        var loginPage = new LoginPage();
+        var authInfo = DataHelper.getAuthInfo();
+        var verificationPage = loginPage.validLogin(authInfo);
+        var verificationCode = DataHelper.getVerificationCodeFor(authInfo);
+        var dashboardPage = verificationPage.validVerify(verificationCode);
+        var transferPage = dashboardPage.replenishCard(DataHelper.getFirstCardInfo(authInfo));
+
+        transferPage.transferMoney(
+                DataHelper.getSecondCardInfo(authInfo).getCardNumber(),
+                15000);
+
+        transferPage.transferPageErrorMassage();
+    }
+
+    @Test
+    void shouldTransferMoneyToSecondCardFromFirstCardHugeSum2Test() {
+        var loginPage = new LoginPage();
+        var authInfo = DataHelper.getAuthInfo();
+        var verificationPage = loginPage.validLogin(authInfo);
+        var verificationCode = DataHelper.getVerificationCodeFor(authInfo);
+        var dashboardPage = verificationPage.validVerify(verificationCode);
+        var transferPage = dashboardPage.replenishCard(DataHelper.getSecondCardInfo(authInfo));
+
+        transferPage.transferMoney(
+                DataHelper.getSecondCardInfo(authInfo).getCardNumber(),
+                15000);
+
+        transferPage.transferPageErrorMassage();
+    }
+}
