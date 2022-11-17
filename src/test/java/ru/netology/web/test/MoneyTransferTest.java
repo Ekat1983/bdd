@@ -15,7 +15,7 @@ public class MoneyTransferTest {
 
     @BeforeEach
     void shouldStart() {
-        open("http://localhost:9999/");
+        open("http://localhost:9999");
     }
 
     @AfterEach
@@ -158,6 +158,6 @@ public class MoneyTransferTest {
                 DataHelper.getSecondCardInfo(authInfo).getCardNumber(),
                 15000);
 
-        transferPage.transferPageErrorMassage();
+         transferPage.transferPageErrorMassage();
     }
 }

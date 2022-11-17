@@ -11,7 +11,7 @@ import static com.codeborne.selenide.Selenide.$$;
 
 public class DashboardPage {
 
-    private final SelenideElement heading = $("[data-test-id='dashboard']");
+    private final SelenideElement heaging = $("[data-test-id='dashboard']");
     private final ElementsCollection cardLine = $$("body .list__item div");
     private final String balanceStart = "баланс: ";
     private final String balanceFinish = " р.";
@@ -19,7 +19,7 @@ public class DashboardPage {
     private final String searchButton = "[data-test-id='action-deposit']";
 
     public DashboardPage() { //контруктор проверки, что личный кабинет виден
-        heading.shouldBe(Condition.visible);
+        heaging.shouldBe(Condition.visible);
     }
 
     private int extractBalance(String text) {

@@ -8,11 +8,11 @@ import static com.codeborne.selenide.Condition.exactText;
 import static com.codeborne.selenide.Selenide.$;
 
 public class TransferPage {
-  private SelenideElement heading = $("[data-test-id='dashboard']");
-  private SelenideElement transferAmount = $("[data-test-id='amount'] input");
-  private SelenideElement transferFrom = $("[data-test-id='from'] input");
-  private SelenideElement transferButton = $("[data-test-id='action-transfer'].button");
-  private SelenideElement errorMassage = $("[data-test-id='error-notification'] .notification__content");
+  private final SelenideElement heading = $("[data-test-id='dashboard']");
+  private final SelenideElement transferAmount = $("[data-test-id='amount'] input");
+  private final SelenideElement transferFrom = $("[data-test-id='from'] input");
+  private final SelenideElement transferButton = $("[data-test-id='action-transfer'].button");
+  private final SelenideElement errorMassage = $("[data-test-id='error-notification'] .notification__content");
 
   public TransferPage() {
     heading.shouldBe(Condition.visible);
